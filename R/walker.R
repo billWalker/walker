@@ -180,8 +180,8 @@ walker <- function(formula, data, beta_prior, sigma_prior, init, chains, newdata
   } else {
     sampling(stanmodels$rw_model,
       data = stan_data, chains = chains, init = init,
-      pars = c("sigma_y", "sigma_b", "beta", 
-        if (return_y_rep) "y_rep", if (n_new > 0) "y_new"), ...)
+      pars = unlist(c("sigma_y", "sigma_b", "beta", 
+        if (return_y_rep) c("y_rep","beta_new"), if (n_new > 1) "y_new")), ...)
   }
 }
 
