@@ -123,9 +123,8 @@
 #' sum(get_elapsed_time(naive_walker))
 #' }
 #' 
-walker <- function(formula, data, beta_prior, sigma_prior, init, chains, newdata,
+data_for_walker <- function(formula, data, beta_prior, sigma_prior, init, chains, newdata,
   naive = FALSE, return_x_reg = FALSE, return_y_rep = TRUE, ...) {
-  
   # build y and xreg
   mf <- match.call(expand.dots = FALSE)
   mf <- mf[c(1L, match(c("formula", "data"), names(mf), 0L))]
@@ -161,6 +160,14 @@ walker <- function(formula, data, beta_prior, sigma_prior, init, chains, newdata
     beta_mean = structure(beta_prior[, 1], dim = k), 
     beta_sd = structure(beta_prior[, 2], dim = k),
     sigma_mean = sigma_prior[, 1], sigma_sd = sigma_prior[, 2])
+  
+  return(stan_data)
+}
+walker <- function(formula, data, beta_prior, sigma_prior, init, chains, newdata,
+  naive = FALSE, return_x_reg = FALSE, return_y_rep = TRUE, ...) {
+  
+  stan_data <- data_for_walker(formula, data, beta_prior, sigma_prior, init, chains, newdata,
+  naive = FALSE, return_x_reg = FALSE, return_y_rep = TRUE, ...)
   
   if (missing(chains)) chains <- 4
   if (missing(init)) {
